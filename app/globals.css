@@ -1,0 +1,284 @@
+@import "tailwindcss";
+
+@theme {
+  /* ========== カラーパレット：ラグジュアリー犬 ========== */
+
+  /* ゴールド系 */
+  --color-gold-50:  #fdf8ef;
+  --color-gold-100: #f7e9c8;
+  --color-gold-200: #efd095;
+  --color-gold-300: #e3b05e;
+  --color-gold-400: #d4944a; /* メインゴールド */
+  --color-gold-500: #c47a2e;
+  --color-gold-600: #a66025;
+  --color-gold-700: #854820;
+  --color-gold-800: #64341a;
+  --color-gold-900: #432012;
+
+  /* ダーク系 */
+  --color-ink-50:  #f5f2ee;
+  --color-ink-100: #e8e2da;
+  --color-ink-200: #cec4b6;
+  --color-ink-300: #b0a291;
+  --color-ink-400: #8a7d6d;
+  --color-ink-500: #6b6054;
+  --color-ink-600: #4e463b;
+  --color-ink-700: #322e28;
+  --color-ink-800: #1c1916;
+  --color-ink-900: #0d0b09;
+  --color-ink-950: #070604;
+
+  /* クリーム系 */
+  --color-cream-50:  #fdfcfa;
+  --color-cream-100: #f9f5ef;
+  --color-cream-200: #f1e9db;
+  --color-cream-300: #e6d9c4;
+  --color-cream-400: #d6c4a8;
+  --color-cream-500: #c2a882;
+
+  /* セマンティックカラー */
+  --color-background:    var(--color-ink-950);
+  --color-surface:       var(--color-ink-900);
+  --color-surface-2:     var(--color-ink-800);
+  --color-border:        var(--color-ink-700);
+  --color-border-subtle: var(--color-ink-600);
+  --color-primary:       var(--color-gold-400);
+  --color-primary-light: var(--color-gold-200);
+  --color-primary-dark:  var(--color-gold-600);
+  --color-text:          var(--color-cream-200);
+  --color-text-muted:    var(--color-ink-300);
+  --color-text-subtle:   var(--color-ink-400);
+
+  /* ========== フォント ========== */
+  --font-sans: 'Noto Sans JP', 'Hiragino Sans', sans-serif;
+  --font-serif: 'Cormorant Garamond', 'Noto Serif JP', Georgia, serif;
+  --font-display: 'Cormorant Garamond', serif;
+
+  /* ========== アニメーション ========== */
+  --ease-luxury: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --duration-fast:   150ms;
+  --duration-normal: 300ms;
+  --duration-slow:   600ms;
+}
+
+/* ========== ベーススタイル ========== */
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    font-family: var(--font-sans);
+    background-color: var(--color-background);
+    color: var(--color-text);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-serif);
+    letter-spacing: 0.02em;
+  }
+
+  /* スクロールバーをスタイリング */
+  ::-webkit-scrollbar {
+    width: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-surface);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: 2px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-gold-600);
+  }
+
+  /* フォーカスリング */
+  :focus-visible {
+    outline: 1px solid var(--color-gold-400);
+    outline-offset: 2px;
+  }
+
+  /* セレクション */
+  ::selection {
+    background-color: color-mix(in srgb, var(--color-gold-400) 30%, transparent);
+    color: var(--color-cream-100);
+  }
+}
+
+/* ========== ユーティリティ ========== */
+@layer utilities {
+  /* ゴールドグラデーションテキスト */
+  .text-gradient-gold {
+    background: linear-gradient(
+      135deg,
+      var(--color-gold-200) 0%,
+      var(--color-gold-400) 40%,
+      var(--color-gold-200) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  /* ラグジュアリーカードベース */
+  .card-luxury {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    transition: border-color var(--duration-normal) var(--ease-luxury),
+                box-shadow var(--duration-normal) var(--ease-luxury);
+  }
+  .card-luxury:hover {
+    border-color: var(--color-gold-700);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-gold-400) 10%, transparent),
+                0 8px 32px -8px rgba(0, 0, 0, 0.6);
+  }
+
+  /* ゴールドボタン */
+  .btn-gold {
+    background: linear-gradient(135deg, var(--color-gold-500) 0%, var(--color-gold-400) 50%, var(--color-gold-500) 100%);
+    color: var(--color-ink-950);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    padding: 0.625rem 1.5rem;
+    border-radius: 0.375rem;
+    transition: all var(--duration-normal) var(--ease-luxury);
+    border: 1px solid transparent;
+  }
+  .btn-gold:hover {
+    background: linear-gradient(135deg, var(--color-gold-400) 0%, var(--color-gold-300) 50%, var(--color-gold-400) 100%);
+    box-shadow: 0 0 20px color-mix(in srgb, var(--color-gold-400) 30%, transparent);
+    transform: translateY(-1px);
+  }
+  .btn-gold:active {
+    transform: translateY(0);
+  }
+
+  /* ゴーストボタン */
+  .btn-ghost {
+    background: transparent;
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.625rem 1.5rem;
+    border-radius: 0.375rem;
+    transition: all var(--duration-normal) var(--ease-luxury);
+  }
+  .btn-ghost:hover {
+    border-color: var(--color-gold-600);
+    color: var(--color-gold-300);
+  }
+
+  /* 区切り線 */
+  .divider-gold {
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--color-gold-700) 20%,
+      var(--color-gold-500) 50%,
+      var(--color-gold-700) 80%,
+      transparent 100%
+    );
+  }
+
+  /* インプット */
+  .input-luxury {
+    background-color: var(--color-surface-2);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    border-radius: 0.5rem;
+    padding: 0.625rem 1rem;
+    font-size: 0.875rem;
+    transition: border-color var(--duration-fast) var(--ease-luxury),
+                box-shadow var(--duration-fast) var(--ease-luxury);
+    width: 100%;
+  }
+  .input-luxury::placeholder {
+    color: var(--color-text-subtle);
+  }
+  .input-luxury:focus {
+    outline: none;
+    border-color: var(--color-gold-600);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-gold-400) 12%, transparent);
+  }
+
+  /* バッジ */
+  .badge-gold {
+    background: color-mix(in srgb, var(--color-gold-400) 15%, transparent);
+    color: var(--color-gold-300);
+    border: 1px solid color-mix(in srgb, var(--color-gold-400) 30%, transparent);
+    border-radius: 9999px;
+    padding: 0.125rem 0.625rem;
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+}
+
+/* ========== キーフレーム ========== */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+@keyframes pulse-gold {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-gold-400) 30%, transparent); }
+  50%       { box-shadow: 0 0 0 8px color-mix(in srgb, var(--color-gold-400) 0%, transparent); }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.6s var(--ease-luxury) forwards;
+}
+.animate-fade-in {
+  animation: fade-in 0.4s var(--ease-luxury) forwards;
+}
+.animate-shimmer {
+  background-size: 200% auto;
+  animation: shimmer 2s linear infinite;
+}
+
+/* ========== React Flow カスタムスタイル ========== */
+.react-flow__node {
+  font-family: var(--font-sans);
+}
+.react-flow__edge-path {
+  stroke-width: 2;
+}
+.react-flow__background {
+  background-color: var(--color-background) !important;
+}
+.react-flow__controls button {
+  background-color: var(--color-surface) !important;
+  border-color: var(--color-border) !important;
+  color: var(--color-text-muted) !important;
+}
+.react-flow__controls button:hover {
+  background-color: var(--color-surface-2) !important;
+}
