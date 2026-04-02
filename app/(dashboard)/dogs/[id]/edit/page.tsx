@@ -3,6 +3,7 @@ import { notFound, redirect } from 'next/navigation'
 import DogEditForm from '@/components/dogs/DogEditForm'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
+import type { Dog } from '@/lib/supabase/types'
 
 interface PageProps {
   params: Promise<{ id: string }>
@@ -16,10 +17,10 @@ export default async function DogEditPage({ params }: PageProps) {
 
   const { data: { user } } = await supabase.auth.getUser()
 
-  const { data: dog } = await supabase.from('dogs').select('*').eq('id', id).single()
+  const { data: rawDog } = await supabase.from('dogs').select('*').eq('id', id).single()
+  const dog = rawDog as Dog | null
   if (!dog) notFound()
-  const typedDog = dog!
-  if (typedDog.owner_id !== user?.id) redirect('/dogs')
+  if (dog.owner_id !== user?.id) redirect('/dogs')
 
   const { data: pedigree } = await supabase
     .from('pedigree_records')
@@ -42,13 +43,13 @@ export default async function DogEditPage({ params }: PageProps) {
           Edit
         </p>
         <h1 className="text-3xl font-light" style={{ fontFamily: 'var(--font-cormorant)', color: 'var(--color-cream-100)' }}>
-          {typedDog.name}を編集
+          {dog.name}を編集
         </h1>
       </div>
 
       <div className="divider-gold mb-8" />
 
-      <DogEditForm dog={typedDog} pedigree={pedigree} />
+      <DogEditForm dog={dog} pedigree={pedigree} />
     </div>
   )
 }

@@ -6,6 +6,8 @@ import FamilyTree from '@/components/dogs/FamilyTree'
 import ParentLinker from '@/components/dogs/ParentLinker'
 import type { Dog } from '@/lib/supabase/types'
 
+
+
 interface PageProps {
   params: Promise<{ id: string }>
 }
@@ -13,7 +15,8 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps) {
   const { id } = await params
   const supabase = await createClient()
-  const { data: dog } = await supabase.from('dogs').select('name').eq('id', id).single()
+  const { data: rawDog } = await supabase.from('dogs').select('name').eq('id', id).single()
+  const dog = rawDog as Pick<Dog, 'name'> | null
   return { title: dog ? `${dog.name}の家系図` : '家系図' }
 }
 
@@ -67,11 +70,12 @@ export default async function TreePage({ params }: PageProps) {
 
   // アクセス権チェック
   const { data: { user } } = await supabase.auth.getUser()
-  const { data: dog } = await supabase
+  const { data: rawDog } = await supabase
     .from('dogs')
     .select('owner_id, is_public, name')
     .eq('id', id)
     .single()
+  const dog = rawDog as Pick<Dog, 'owner_id' | 'is_public' | 'name'> | null
 
   if (!dog) notFound()
   if (!dog.is_public && dog.owner_id !== user?.id) notFound()

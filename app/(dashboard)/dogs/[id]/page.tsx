@@ -7,6 +7,7 @@ import {
 } from 'lucide-react'
 import { formatGender } from '@/lib/utils'
 import AIPortraitButton from '@/components/dogs/AIPortraitButton'
+import type { Dog } from '@/lib/supabase/types'
 
 interface PageProps {
   params: Promise<{ id: string }>
@@ -15,7 +16,8 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps) {
   const { id } = await params
   const supabase = await createClient()
-  const { data } = await supabase.from('dogs').select('name, breed').eq('id', id).single()
+  const { data: rawData } = await supabase.from('dogs').select('name, breed').eq('id', id).single()
+  const data = rawData as Pick<Dog, 'name' | 'breed'> | null
   return { title: data ? `${data.name} — ${data.breed}` : '愛犬プロフィール' }
 }
 
@@ -26,11 +28,12 @@ export default async function DogProfilePage({ params }: PageProps) {
   const { data: { user } } = await supabase.auth.getUser()
 
   // 犬の情報を取得
-  const { data: dog } = await supabase
+  const { data: rawDog } = await supabase
     .from('dogs')
     .select('*')
     .eq('id', id)
     .single()
+  const dog = rawDog as Dog | null
 
   if (!dog) notFound()
   if (!dog.is_public && dog.owner_id !== user?.id) notFound()
