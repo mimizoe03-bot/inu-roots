@@ -54,21 +54,31 @@ export default function RegisterPage() {
 
     setLoading(true)
     try {
+      // サーバーAPIでメール確認なしで登録
+      const res = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: form.email,
+          password: form.password,
+          username: form.username,
+          display_name: form.displayName || form.username,
+        }),
+      })
+      const json = await res.json() as { error?: string }
+      if (!res.ok) throw new Error(json.error ?? '登録に失敗しました')
+
+      // 登録成功後にログイン
       const supabase = createClient()
-      const { error } = await supabase.auth.signUp({
+      const { error: loginError } = await supabase.auth.signInWithPassword({
         email: form.email,
         password: form.password,
-        options: {
-          data: {
-            username: form.username,
-            display_name: form.displayName || form.username,
-          },
-        },
       })
+      if (loginError) throw loginError
 
-      if (error) throw error
-
-      setStep('verify')
+      toast.success('登録完了！')
+      router.push('/dogs')
+      router.refresh()
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : '登録に失敗しました'
       toast.error(message)
