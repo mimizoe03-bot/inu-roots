@@ -29,8 +29,14 @@ export async function middleware(request: NextRequest) {
     },
   )
 
-  // セッション更新（これを必ず呼ぶこと）
-  const { data: { user } } = await supabase.auth.getUser()
+  // セッション更新（接続エラーは無視）
+  let user = null
+  try {
+    const { data } = await supabase.auth.getUser()
+    user = data.user
+  } catch {
+    return NextResponse.next({ request })
+  }
 
   const pathname = request.nextUrl.pathname
 
